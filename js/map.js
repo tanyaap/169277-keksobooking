@@ -43,6 +43,7 @@ for (var i = 0; i < 8; i++) {
   var adsX = getRandomItemInRange(300, 900);
   var adsY = getRandomItemInRange(100, 500);
   var oneSet = {
+    'id': i,
     'author': {
       'avatar': 'img/avatars/user' + '0' + getUniqueRandomElement(AVATARS) + '.png',
     },
@@ -68,11 +69,11 @@ for (var i = 0; i < 8; i++) {
 }
 
 var map = document.querySelector('.map');
-var pin = '';
 
 function makeOnePin(onePin) {
-  pin = document.createElement('button');
-  pin.className = 'map__pin hidden';
+  var pin = document.createElement('button');
+  pin.id = onePin.id;
+  pin.className = 'map__pin';
   pin.style.left = onePin.location.x - PIN_WIDTH / 2 + 'px';
   pin.style.top = onePin.location.y + PIN_HEIGHT + 'px';
   var pinImage = document.createElement('img');
@@ -93,10 +94,9 @@ function renderPins() {
   }
   mapPins.appendChild(fragmentPin);
 }
-renderPins();
 
 var adTemplate = document.querySelector('template').content;
-var adFromSet = adTemplate.cloneNode(true);
+var adFromSet = adTemplate.querySelector('.map__card').cloneNode(true);
 
 function popupOneAd(oneAd) {
   adFromSet.querySelector('h3').textContent = oneAd.offer.title;
@@ -117,86 +117,79 @@ function popupOneAd(oneAd) {
   adFromSet.querySelector('ul + p').textContent = oneAd.offer.description;
   adFromSet.querySelector('.popup__avatar').src = oneAd.author.avatar;
 }
-popupOneAd(adsSet[0]);
-
-var mapFiltersContainer = map.querySelector('.map__filters-container');
-map.insertBefore(adFromSet, mapFiltersContainer);
 
 var mapPinMain = map.querySelector('.map__pin--main');
-var mapPinForm = map.querySelector('.map__filters');
-var housingType = mapPinForm.querySelector('#housing-type');
-var housingPrice = mapPinForm.querySelector('#housing-price');
-var housingRooms = mapPinForm.querySelector('#housing-rooms');
-var housingGuests = mapPinForm.querySelector('#housing-guests');
-var features = mapPinForm.querySelector('.features');
-var popup = adTemplate.querySelector('.popup');
-var popupClose = popup.querySelector('.popup__close');
+var notice = document.querySelector('.notice');
+var noticeForm = notice.querySelector('.notice__form');
+var mapFiltersContainer = map.querySelector('.map__filters-container');
+var pinActive = mapPins.querySelector('.map__pin--active');
 
 function onMouseupActivate() {
   map.classList.remove('map--faded');
-  mapPinForm.classList.remove('notice__form--disabled');
-  housingType.removeAttribute('disabled');
-  housingPrice.removeAttribute('disabled');
-  housingRooms.removeAttribute('disabled');
-  housingGuests.removeAttribute('disabled');
-  features.removeAttribute('disabled');
-  pin.classList.remove('hidden'); // один пин все время есть на экране (и во время блокировки) на одном и том же месте, после снятия блокировки отображается еще один пин и все
+  noticeForm.classList.remove('notice__form--disabled');
+  noticeForm.querySelector('.notice__header').removeAttribute('disabled');
+  noticeForm.querySelector('.form__element--wide').removeAttribute('disabled');
+  noticeForm.querySelectorAll('.form__element--wide')[1].removeAttribute('disabled');
+  noticeForm.querySelectorAll('.form__element')[2].removeAttribute('disabled');
+  noticeForm.querySelectorAll('.form__element')[3].removeAttribute('disabled');
+  noticeForm.querySelectorAll('.form__element')[4].removeAttribute('disabled');
+  noticeForm.querySelectorAll('.form__element')[5].removeAttribute('disabled');
+  noticeForm.querySelectorAll('.form__element')[6].removeAttribute('disabled');
+  noticeForm.querySelector('.features').removeAttribute('disabled');
+  noticeForm.querySelectorAll('.form__element--wide')[3].removeAttribute('disabled');
+  noticeForm.querySelectorAll('.form__element--wide')[4].removeAttribute('disabled');
+  noticeForm.querySelector('.form__element--submit').removeAttribute('disabled');
+  renderPins();
 }
 mapPinMain.addEventListener('mouseup', onMouseupActivate);
 
-function openPopup() {
-  pin.classList.add('map__pin--active');
-  popup.classList.remove('hidden'); // не срабатывает, я добавила hidden в размтку template, может, по-другому надо было убрать показ по умолчанию?
-}
+var popup;
+var popupClose;
 
-function onClickOpenPopup() {
-  openPopup();
+function onPinClick(evt) {
+  mapPinMain.removeEventListener('mouseup', onMouseupActivate);
+  var target = evt.target.tagName === 'IMG' ? evt.target.parentNode : evt.target;
+  if (pinActive) {
+    pinActive.classList.remove('map__pin--active');
+  }
+  if (target.classList.contains('map__pin') && !target.classList.contains('map__pin--main')) {
+    target.classList.add('map__pin--active');
+    pinActive = target;
+    var adNumber = target.id;
+    popupOneAd(adsSet[adNumber]);
+    map.insertBefore(adFromSet, mapFiltersContainer);
+    popup = map.querySelector('.map__card');
+    popupClose = popup.querySelector('.popup__close');
+    popup.classList.remove('hidden');
+    map.addEventListener('keydown', onPopupEscPress);
+    popupClose.addEventListener('click', onPopupClick);
+    popupClose.addEventListener('keydown', function () {
+      if (evt.keyCode === ENTER_KEYCODE) {
+        closePopup();
+      }
+    });
+  }
 }
-pin.addEventListener('click', onClickOpenPopup);
+map.addEventListener('click', onPinClick);
 
-pin.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ENTER_KEYCODE) {
-    openPopup();
+map.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE && !mapPinMain) {
+    onPinClick();
   }
 });
 
-var clickedPin = pin;
-function clickHandler(evt) {
-  if (clickedPin) {
-    pin.classList.remove('map__pin--active');
-  }
-  clickedPin = evt.currentTarget;
-  clickedPin(onClickOpenPopup);
-}
-pin.addEventListener('click', clickHandler);
-
 function onPopupEscPress(evt) {
   if (evt.keyCode === ESC_KEYCODE) {
-    onClickClosePopup();
+    closePopup();
   }
 }
 
 function closePopup() {
+  pinActive.classList.remove('map__pin--active');
   popup.classList.add('hidden');
-  pin.classList.remove('map__pin--active');
   document.removeEventListener('keydown', onPopupEscPress);
 }
 
-function onClickClosePopup() {
+function onPopupClick() {
   closePopup();
 }
-popupClose.addEventListener('click', onClickClosePopup);
-
-popupClose.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ENTER_KEYCODE) {
-    popup.classList.add('hidden');
-    pin.classList.remove('map__pin--active');
-  }
-});
-
-popup.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ESC_KEYCODE) {
-    popup.classList.add('hidden');
-    pin.classList.remove('map__pin--active');
-  }
-});
