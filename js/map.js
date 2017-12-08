@@ -195,41 +195,37 @@ var timingInOut = noticeForm.querySelectorAll('.form__element')[4];
 var timein = timingInOut.querySelector('#timein');
 var timeout = timingInOut.querySelector('#timeout');
 var type = noticeForm.querySelectorAll('.form__element')[2];
+var typeSelect = type.querySelector('#type');
 var price = noticeForm.querySelectorAll('.form__element')[3];
+var priceSelect = price.querySelector('#price');
 var rooms = noticeForm.querySelectorAll('.form__element')[5];
 var capacity = noticeForm.querySelectorAll('.form__element')[6];
 var roomNumber = rooms.querySelector('#room_number');
 var capacityGuests = capacity.querySelector('#capacity');
 var submit = noticeForm.querySelector('.form__element--submit');
 
-function onClickChangeTime() {
+function onChangeTimeIn() {
   timein.value = timeout.value;
 }
-timein.addEventListener('change', onClickChangeTime);
-timeout.addEventListener('change', onClickChangeTime);
+timeout.addEventListener('change', onChangeTimeIn);
 
-var typePriceDependence = [
-  {
-    'bungalo': '0',
-    'flat': '1000',
-    'house': '5000',
-    'palace': '10000',
-  }
-];
-
-function onClickChangeType() {
-  for (i = 0; i < typePriceDependence.length; i++) {
-    price.querySelector('#price').min = typePriceDependence[i];
-  }
-  price.querySelector('#price').min = type.querySelector('#type').value;
+function onChangeTimeOut() {
+  timeout.value = timein.value;
 }
-type.addEventListener('change', onClickChangeType);
+timein.addEventListener('change', onChangeTimeOut);
 
-function onClickChangeGuests() {
-  roomNumber.value = capacityGuests.value;
+function onChangeMinPrice() {
+  var minPriceVariety = ['0', '1000', '5000', '10000'];
+  for (i = typeSelect.options.selectedIndex; i < minPriceVariety.length; i++) {
+    priceSelect.min = minPriceVariety[i]; // всем min присваивается значение последней итерации ((
+  }
 }
-roomNumber.addEventListener('change', onClickChangeGuests);
-capacityGuests.addEventListener('change', onClickChangeGuests);
+typeSelect.addEventListener('change', onChangeMinPrice);
+
+function onChangeGuests() {
+  capacityGuests.value = roomNumber.value;
+}
+roomNumber.addEventListener('change', onChangeGuests);
 
 function formValidity(evt) {
   var target = evt.target.submit;
