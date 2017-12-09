@@ -191,18 +191,14 @@ popupClose.addEventListener('keydown', function (evt) {
   }
 });
 
-var timingInOut = noticeForm.querySelectorAll('.form__element')[4];
-var timein = timingInOut.querySelector('#timein');
-var timeout = timingInOut.querySelector('#timeout');
-var type = noticeForm.querySelectorAll('.form__element')[2];
-var typeSelect = type.querySelector('#type');
-var price = noticeForm.querySelectorAll('.form__element')[3];
-var priceSelect = price.querySelector('#price');
-var rooms = noticeForm.querySelectorAll('.form__element')[5];
-var capacity = noticeForm.querySelectorAll('.form__element')[6];
-var roomNumber = rooms.querySelector('#room_number');
-var capacityGuests = capacity.querySelector('#capacity');
-var submit = noticeForm.querySelector('.form__element--submit');
+noticeForm.querySelector('#address').value = '200,400';
+
+var timein = noticeForm.querySelector('#timein');
+var timeout = noticeForm.querySelector('#timeout');
+var typeSelect = noticeForm.querySelector('#type');
+var priceSelect = noticeForm.querySelector('#price');
+var roomNumber = noticeForm.querySelector('#room_number');
+var capacityGuests = noticeForm.querySelector('#capacity');
 
 function onChangeTimeIn() {
   timein.value = timeout.value;
@@ -214,25 +210,38 @@ function onChangeTimeOut() {
 }
 timein.addEventListener('change', onChangeTimeOut);
 
+var minPriceVariety = ['1000', '0', '5000', '10000'];
 function onChangeMinPrice() {
-  var minPriceVariety = ['0', '1000', '5000', '10000'];
-  for (i = typeSelect.options.selectedIndex; i < minPriceVariety.length; i++) {
-    priceSelect.min = minPriceVariety[i]; // всем min присваивается значение последней итерации ((
-  }
+  priceSelect.min = minPriceVariety[typeSelect.options.selectedIndex];
 }
 typeSelect.addEventListener('change', onChangeMinPrice);
 
+function correlateGuestsToRooms() {
+  var selectRooms = roomNumber.selectedIndex;
+  for (i = 0; i < capacityGuests.options.length; i++) {
+    capacityGuests.options[i].removeAttribute('hidden');
+  }
+  if (selectRooms === 0) { // 1 комната
+    capacityGuests.options[0].setAttribute('hidden', 'hidden');
+    capacityGuests.options[1].setAttribute('hidden', 'hidden');
+    capacityGuests.options[3].setAttribute('hidden', 'hidden');
+  }
+  if (selectRooms === 1) { // 2 комнаты
+    capacityGuests.options[0].setAttribute('hidden', 'hidden');
+    capacityGuests.options[3].setAttribute('hidden', 'hidden');
+  }
+  if (selectRooms === 2) { // 3 комнаты
+    capacityGuests.options[3].setAttribute('hidden', 'hidden');
+  }
+  if (selectRooms === 3) { // 100 комнат
+    capacityGuests.options[0].setAttribute('hidden', 'hidden');
+    capacityGuests.options[1].setAttribute('hidden', 'hidden');
+    capacityGuests.options[2].setAttribute('hidden', 'hidden');
+  }
+}
+
 function onChangeGuests() {
+  correlateGuestsToRooms();
   capacityGuests.value = roomNumber.value;
 }
 roomNumber.addEventListener('change', onChangeGuests);
-
-function formValidity(evt) {
-  var target = evt.target.submit;
-  if (target.validity.invalid) {
-    target.style.border = '2px solid #ff0000';
-  } else {
-    target.style.border = '';
-  }
-}
-submit.addEventListener('invalid', formValidity);
