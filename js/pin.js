@@ -25,8 +25,9 @@
   window.pin = {
     renderPins: function () {
       var fragmentPin = document.createDocumentFragment();
-      for (var i = 0; i < window.data.getSet.adsSet.length; i++) { // ошибка
-        fragmentPin.appendChild(makeOnePin(window.data.getSet.adsSet[i])); // ошибка
+      var adsSet = window.data.getSet();
+      for (var i = 0; i < adsSet.length; i++) {
+        fragmentPin.appendChild(makeOnePin(adsSet[i]));
       }
       mapPins.appendChild(fragmentPin);
     }

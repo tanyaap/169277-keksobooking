@@ -10,49 +10,53 @@
   var ESC_KEYCODE = 27;
   var ENTER_KEYCODE = 13;
 
+  function getRandomElement(arr) {
+    var arrRandomItem = Math.floor(Math.random() * arr.length);
+    return arr[arrRandomItem];
+  }
+
+  function getUniqueRandomElement(arr) {
+    var uniqueRandomItem = Math.floor(Math.random() * arr.length);
+    var randomItem = arr[uniqueRandomItem];
+    arr.splice(uniqueRandomItem, 1);
+    return randomItem;
+  }
+
+  function getRandomItemInRange(min, max) {
+    var randomItemInRange = Math.floor(Math.random() * (max - min + 1)) + min;
+    return randomItemInRange;
+  }
+
+  function getFeatures(arr) {
+    var oneAdFeatures = [];
+    var randomLength = getRandomItemInRange(0, arr.length);
+    for (var i = 0; i < randomLength; i++) {
+      oneAdFeatures[i] = getUniqueRandomElement(arr);
+    }
+    return oneAdFeatures;
+  }
+
   window.data = {
-    getRandomElement: function (arr) {
-      var arrRandomItem = Math.floor(Math.random() * arr.length);
-      return arr[arrRandomItem];
-    },
-    getUniqueRandomElement: function (arr) {
-      var uniqueRandomItem = Math.floor(Math.random() * arr.length);
-      var randomItem = arr[uniqueRandomItem];
-      arr.splice(uniqueRandomItem, 1);
-      return randomItem;
-    },
-    getRandomItemInRange: function (min, max) {
-      var randomItemInRange = Math.floor(Math.random() * (max - min + 1)) + min;
-      return randomItemInRange;
-    },
-    getFeatures: function (arr) {
-      var oneAdFeatures = [];
-      var randomLength = window.data.getRandomItemInRange(0, arr.length);
-      for (var i = 0; i < randomLength; i++) {
-        oneAdFeatures[i] = window.data.getUniqueRandomElement(arr);
-      }
-      return oneAdFeatures;
-    },
-    getSet: function () { // ошибка возникает тут из-за того, что этот блок записан в функцию(?)
+    getSet: function () {
       var adsSet = [];
       for (var i = 0; i < 8; i++) {
-        var adsX = window.data.getRandomItemInRange(300, 900);
-        var adsY = window.data.getRandomItemInRange(100, 500);
+        var adsX = getRandomItemInRange(300, 900);
+        var adsY = getRandomItemInRange(100, 500);
         var oneSet = {
           'id': i,
           'author': {
-            'avatar': 'img/avatars/user' + '0' + window.data.getUniqueRandomElement(AVATARS) + '.png',
+            'avatar': 'img/avatars/user' + '0' + getUniqueRandomElement(AVATARS) + '.png',
           },
           'offer': {
-            'title': window.data.getUniqueRandomElement(TITLES),
+            'title': getUniqueRandomElement(TITLES),
             'address': adsX + ', ' + adsY,
-            'price': window.data.getRandomItemInRange(1000, 1000000),
-            'type': window.data.getRandomElement(TYPES),
-            'rooms': window.data.getRandomItemInRange(1, 5),
-            'guests': window.data.getRandomItemInRange(1, 30),
-            'checkin': window.data.getRandomElement(CHECKINS),
-            'checkout': window.data.getRandomElement(CHECKOUTS),
-            'features': window.data.getFeatures(FEATURES),
+            'price': getRandomItemInRange(1000, 1000000),
+            'type': getRandomElement(TYPES),
+            'rooms': getRandomItemInRange(1, 5),
+            'guests': getRandomItemInRange(1, 30),
+            'checkin': getRandomElement(CHECKINS),
+            'checkout': getRandomElement(CHECKOUTS),
+            'features': getFeatures(FEATURES),
             'description': '',
             'photos': [],
           },
@@ -63,6 +67,7 @@
         };
         adsSet[i] = oneSet;
       }
+      return adsSet;
     },
     isEscEvent: function (evt, action) {
       if (evt.keyCode === ESC_KEYCODE) {
