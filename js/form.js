@@ -3,8 +3,6 @@
 (function () {
   var MIN_PRICE_VARIETY = ['1000', '0', '5000', '10000'];
 
-  var map = document.querySelector('.map');
-  var mapPinMain = map.querySelector('.map__pin--main');
   var notice = document.querySelector('.notice');
   var noticeForm = notice.querySelector('.notice__form');
   var timein = noticeForm.querySelector('#timein');
@@ -16,22 +14,15 @@
   var address = noticeForm.querySelector('#address');
   var submit = noticeForm.querySelector('.form__submit');
 
-  function onMouseupFormActivate() {
-    noticeForm.classList.remove('notice__form--disabled');
-    noticeForm.querySelector('.notice__header').removeAttribute('disabled');
-    noticeForm.querySelector('.form__element--wide').removeAttribute('disabled');
-    noticeForm.querySelectorAll('.form__element--wide')[1].removeAttribute('disabled');
-    noticeForm.querySelectorAll('.form__element')[2].removeAttribute('disabled');
-    noticeForm.querySelectorAll('.form__element')[3].removeAttribute('disabled');
-    noticeForm.querySelectorAll('.form__element')[4].removeAttribute('disabled');
-    noticeForm.querySelectorAll('.form__element')[5].removeAttribute('disabled');
-    noticeForm.querySelectorAll('.form__element')[6].removeAttribute('disabled');
-    noticeForm.querySelector('.features').removeAttribute('disabled');
-    noticeForm.querySelectorAll('.form__element--wide')[3].removeAttribute('disabled');
-    noticeForm.querySelectorAll('.form__element--wide')[4].removeAttribute('disabled');
-    noticeForm.querySelector('.form__element--submit').removeAttribute('disabled');
-  }
-  mapPinMain.addEventListener('mouseup', onMouseupFormActivate);
+  window.form = {
+    onMouseupFormActivate: function () {
+      noticeForm.classList.remove('notice__form--disabled');
+      var fieldsets = noticeForm.children;
+      for (var i = 0; i < fieldsets.length; i++) {
+        fieldsets[i].removeAttribute('disabled');
+      }
+    }
+  };
 
   function onChangeTimeIn() {
     timein.value = timeout.value;
@@ -78,7 +69,7 @@
   }
   roomNumber.addEventListener('change', onChangeGuests);
 
-  address = address.value ? address.value : '200,400';
+  address.value = address.value ? address.value : '200,400';
 
   function formValidity(evt) {
     var stopSubmit = false;

@@ -23,11 +23,10 @@
   }
 
   window.pin = {
-    renderPins: function () {
+    renderPins: function (arrayObj) {
       var fragmentPin = document.createDocumentFragment();
-      var adsSet = window.data.getSet();
-      for (var i = 0; i < adsSet.length; i++) {
-        fragmentPin.appendChild(makeOnePin(adsSet[i]));
+      for (var i = 0; i < arrayObj.length; i++) {
+        fragmentPin.appendChild(makeOnePin(arrayObj[i]));
       }
       mapPins.appendChild(fragmentPin);
     }

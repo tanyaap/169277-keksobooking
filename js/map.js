@@ -10,19 +10,18 @@
   var popup = adTemplate.querySelector('.map__card').cloneNode(true);
   var popupClose = popup.querySelector('.popup__close');
 
+  var adsSet = [];
+  adsSet = window.data.getSet();
+
   function onMouseupActivate() {
     map.classList.remove('map--faded');
-    window.pin.renderPins();
-    var adsSet = window.data.getSet();
-    window.data.getSet();
-    for (var i = 0; i < adsSet.length; i++) {
-      window.card.popupOneAd(adsSet[i]);
-    }
+    mapPinMain.removeEventListener('mouseup', onMouseupActivate);
+    window.pin.renderPins(adsSet);
+    window.form.onMouseupFormActivate();
   }
   mapPinMain.addEventListener('mouseup', onMouseupActivate);
 
   function onPinClick(evt) {
-    mapPinMain.removeEventListener('mouseup', onMouseupActivate);
     var target = evt.target.tagName === 'IMG' ? evt.target.parentNode : evt.target;
     if (pinActive) {
       pinActive.classList.remove('map__pin--active');
@@ -31,8 +30,7 @@
       target.classList.add('map__pin--active');
       pinActive = target;
       var adNumber = target.id;
-      var adsSet = window.data.getSet();
-      window.card.popupOneAd(adsSet[adNumber]);
+      window.card.popupOneAd(popup, adsSet[adNumber]);
       map.insertBefore(popup, mapFiltersContainer);
       popup.classList.remove('hidden');
     }
