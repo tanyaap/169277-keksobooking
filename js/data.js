@@ -28,10 +28,11 @@
   }
 
   function getFeatures(arr) {
+    var arrCopy = arr.slice();
     var oneAdFeatures = [];
-    var randomLength = getRandomItemInRange(0, arr.length);
+    var randomLength = getRandomItemInRange(1, arrCopy.length);
     for (var i = 0; i < randomLength; i++) {
-      oneAdFeatures[i] = getUniqueRandomElement(arr);
+      oneAdFeatures[i] = getUniqueRandomElement(arrCopy);
     }
     return oneAdFeatures;
   }
