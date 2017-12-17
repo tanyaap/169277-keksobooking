@@ -23,20 +23,16 @@
     }
   };
 
-  function onChangeTimeIn() {
-    timein.value = timeout.value;
-  }
-  timeout.addEventListener('change', onChangeTimeIn);
+  var syncValues = function (field1, field2) {
+    field1.value = field2.value;
+  };
+  window.synchronize(timein, timeout, syncValues);
+  window.synchronize(timeout, timein, syncValues);
 
-  function onChangeTimeOut() {
-    timeout.value = timein.value;
-  }
-  timein.addEventListener('change', onChangeTimeOut);
-
-  function onChangeMinPrice() {
-    priceSelect.min = MIN_PRICE_VARIETY[typeSelect.options.selectedIndex];
-  }
-  typeSelect.addEventListener('change', onChangeMinPrice);
+  var syncMinValues = function (field1, field2) {
+    field2.min = MIN_PRICE_VARIETY[field1.options.selectedIndex];
+  };
+  window.synchronize(typeSelect, priceSelect, syncMinValues);
 
   function correlateGuestsToRooms() {
     var selectRooms = roomNumber.selectedIndex;
@@ -62,11 +58,11 @@
     }
   }
 
-  function onChangeGuests() {
+  var syncValuesGuestsToRooms = function (field1, field2) {
     correlateGuestsToRooms();
-    capacityGuests.value = roomNumber.value;
-  }
-  roomNumber.addEventListener('change', onChangeGuests);
+    field2.value = field1.value;
+  };
+  window.synchronize(roomNumber, capacityGuests, syncValuesGuestsToRooms);
 
   function formValidity(evt) {
     var stopSubmit = false;
