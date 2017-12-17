@@ -30,6 +30,12 @@
       }
       popup.querySelector('ul + p').textContent = oneAd.offer.description;
       popup.querySelector('.popup__avatar').src = oneAd.author.avatar;
+    },
+
+    showCard: function (elementToClick, elementToShow, callback) {
+      if (typeof callback === 'function') {
+        callback();
+      }
     }
   };
 })();
