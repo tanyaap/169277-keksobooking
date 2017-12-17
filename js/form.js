@@ -24,7 +24,7 @@
   };
 
   var syncValues = function (field1, field2) {
-    field1.value = field2.value;
+    field2.value = field1.value;
   };
   window.synchronize(timein, timeout, syncValues);
   window.synchronize(timeout, timein, syncValues);
