@@ -79,6 +79,16 @@
       if (evt.keyCode === ENTER_KEYCODE) {
         action();
       }
+    },
+    errorHandler: function (errorMessage) {
+      var node = document.createElement('div');
+      node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: #dd1f1f; border: 2px solid #fff; font-weight: bold';
+      node.style.position = 'absolute';
+      node.style.left = 0;
+      node.style.right = 0;
+      node.style.fontSize = '28px';
+      node.textContent = errorMessage;
+      document.body.insertAdjacentElement('afterbegin', node);
     }
   };
 })();

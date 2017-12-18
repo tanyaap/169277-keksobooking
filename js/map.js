@@ -26,7 +26,8 @@
   function onMouseupActivate() {
     map.classList.remove('map--faded');
     mapPinMain.removeEventListener('mouseup', onMouseupActivate);
-    window.pin.renderPins(adsSet);
+    window.backend.load(window.pin.renderPins, window.data.errorHandler);
+    //  window.pin.renderPins(adsSet);
     window.form.onMouseupFormActivate();
   }
   mapPinMain.addEventListener('mouseup', onMouseupActivate);
