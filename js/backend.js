@@ -34,6 +34,22 @@
       var xhr = requestCommon(onLoad, onError);
       xhr.open('POST', URL);
       xhr.send(data);
+    },
+
+    errorHandler: function (errorMessage) {
+      var node = document.createElement('div');
+      node.style.zIndex = 100;
+      node.style.margin = '0 auto';
+      node.style.textAlign = 'center';
+      node.style.backgroundColor = '#dd1f1f';
+      node.style.border = '2px solid #fff';
+      node.style.border = 'bold';
+      node.style.position = 'absolute';
+      node.style.left = 0;
+      node.style.right = 0;
+      node.style.fontSize = '28px';
+      node.textContent = errorMessage;
+      document.body.insertAdjacentElement('afterbegin', node);
     }
   };
 })();

@@ -111,7 +111,7 @@
   submit.addEventListener('click', formValidity);
 
   noticeForm.addEventListener('submit', function (evt) {
-    window.backend.save(new FormData(noticeForm), noticeForm.reset(), window.data.errorHandler);
+    window.backend.save(new FormData(noticeForm), noticeForm.reset(), window.backend.errorHandler);
     evt.preventDefault();
   });
 })();

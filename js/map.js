@@ -14,20 +14,25 @@
   var pinMainX = mapPinMain.offsetLeft + MAIN_PIN_WIDTH / 2;
   var pinMainY = mapPinMain.offsetTop + MAIN_PIN_HEIGHT;
   var limits = {
-    'top': 100 - MAIN_PIN_HEIGHT,
-    'bottom': 500 - MAIN_PIN_HEIGHT,
-    'left': 300 - MAIN_PIN_WIDTH / 2,
-    'right': 900 - MAIN_PIN_WIDTH / 2,
+    'top': 150 - MAIN_PIN_HEIGHT,
+    'bottom': 700 - MAIN_PIN_HEIGHT,
+    'left': 50 - MAIN_PIN_WIDTH / 2,
+    'right': 1200 - MAIN_PIN_WIDTH / 2,
   };
 
   var adsSet = [];
-  adsSet = window.data.getSet();
+  function successHandler(data) {
+    adsSet = data;
+    for (var i = 0; i < adsSet.length; i++) {
+      adsSet[i].id = i;
+    }
+    window.pin.renderPins(adsSet);
+  }
 
   function onMouseupActivate() {
     map.classList.remove('map--faded');
     mapPinMain.removeEventListener('mouseup', onMouseupActivate);
-    window.backend.load(window.pin.renderPins, window.data.errorHandler);
-    //  window.pin.renderPins(adsSet);
+    window.backend.load(successHandler, window.backend.errorHandler);
     window.form.onMouseupFormActivate();
   }
   mapPinMain.addEventListener('mouseup', onMouseupActivate);
@@ -53,12 +58,12 @@
 
   map.addEventListener('keydown', function (evt) {
     if (!mapPinMain) {
-      window.data.isEnterEvent(evt, onPinClick);
+      window.util.isEnterEvent(evt, onPinClick);
     }
   });
 
   function onPopupEscPress(evt) {
-    window.data.isEscEvent(evt, closePopup);
+    window.util.isEscEvent(evt, closePopup);
   }
   map.addEventListener('keydown', onPopupEscPress);
 
@@ -74,7 +79,7 @@
 
   popupClose.addEventListener('click', onPopupClick);
   popupClose.addEventListener('keydown', function (evt) {
-    window.data.isEnterEvent(evt, closePopup);
+    window.util.isEnterEvent(evt, closePopup);
   });
 
   var address = document.querySelector('#address');
