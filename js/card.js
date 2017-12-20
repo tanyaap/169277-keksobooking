@@ -15,7 +15,7 @@
         typeRu = 'Дом';
       }
       popup.querySelector('h4').textContent = typeRu;
-      popup.querySelector('h4 + p').textContent = oneAd.offer.rooms + ' для ' + oneAd.offer.guests + ' гостей';
+      popup.querySelector('h4 + p').textContent = oneAd.offer.rooms + ' комнат для ' + oneAd.offer.guests + ' гостей';
       popup.querySelectorAll('article p')[3].textContent = 'Заезд после ' + oneAd.offer.checkin + ', ' + 'выезд до ' + oneAd.offer.checkout;
       var popupFeatures = popup.querySelector('.popup__features');
       var popupFeaturesList = popupFeatures.querySelectorAll('li');

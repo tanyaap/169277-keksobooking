@@ -43,7 +43,7 @@
       node.style.textAlign = 'center';
       node.style.backgroundColor = '#dd1f1f';
       node.style.border = '2px solid #fff';
-      node.style.border = 'bold';
+      node.style.fontWeight = 'bold';
       node.style.position = 'absolute';
       node.style.left = 0;
       node.style.right = 0;
