@@ -3,7 +3,6 @@
 (function () {
   var MAIN_PIN_WIDTH = 40;
   var MAIN_PIN_HEIGHT = 44;
-  var DEBOUNCE_INTERVAL = 500;
   var map = document.querySelector('.map');
   var mapPins = map.querySelector('.map__pins');
   var mapPinMain = map.querySelector('.map__pin--main');
@@ -20,13 +19,6 @@
     'left': 50 - MAIN_PIN_WIDTH / 2,
     'right': 1200 - MAIN_PIN_WIDTH / 2,
   };
-  var lastTimeout;
-  function debounce(func) {
-    if (lastTimeout) {
-      window.clearTimeout(lastTimeout);
-    }
-    lastTimeout = window.setTimeout(func, DEBOUNCE_INTERVAL);
-  }
 
   var adsSet = [];
   function successHandler(data) {
@@ -64,7 +56,16 @@
   }
   map.addEventListener('click', onPinClick);
 
-  function updatePins() {
+  var filtersForm = document.querySelector('.map__filters');
+
+  filtersForm.addEventListener('change', function () {
+    window.filterChange.filterAdType(adsSet, 'house');
+    window.filterChange.filterAdType(adsSet, 'flat');
+    window.filterChange.filterAdType(adsSet, 'bungalo');
+    window.filterChange.filterAdType(adsSet, 'palace');
+  });
+
+  /*  function updatePins() {
     window.pin(adsSet.sort(function (left, right) {
       return window.getRank(right) - window.getRank(left);
     }));
@@ -73,8 +74,8 @@
   var type;
   window.pinChange.onTypeChange = function (housingType) {
     type = housingType;
-    debounce(updatePins);
-  };
+    window.util.debounce(updatePins);
+  };*/
 
   map.addEventListener('keydown', function (evt) {
     if (!mapPinMain) {
