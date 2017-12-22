@@ -1,6 +1,15 @@
 'use strict';
 
 (function () {
+  var fragment = document.createDocumentFragment();
+
+  function removeNodes(parent, node) {
+    var child = parent.querySelector(node);
+    while (child) {
+      parent.removeChild(child);
+      child = parent.querySelector(node);
+    }
+  }
   window.card = {
     popupOneAd: function (popup, oneAd) {
       popup.querySelector('h3').textContent = oneAd.offer.title;
@@ -18,18 +27,29 @@
       popup.querySelector('h4 + p').textContent = oneAd.offer.rooms + ' комнат для ' + oneAd.offer.guests + ' гостей';
       popup.querySelectorAll('article p')[3].textContent = 'Заезд после ' + oneAd.offer.checkin + ', ' + 'выезд до ' + oneAd.offer.checkout;
       var popupFeatures = popup.querySelector('.popup__features');
-      var popupFeaturesList = popupFeatures.querySelectorAll('li');
-      for (var i = 0; i < popupFeaturesList.length; i++) {
-        popupFeatures.removeChild(popupFeaturesList[i]);
-      }
-      for (i = 0; i < oneAd.offer.features.length; i++) {
+      removeNodes(popupFeatures, 'li');
+      for (var i = 0; i < oneAd.offer.features.length; i++) {
         var li = document.createElement('li');
         li.classList.add('feature');
         li.classList.add('feature--' + oneAd.offer.features[i]);
-        popupFeatures.appendChild(li);
+        fragment.appendChild(li);
       }
+      popupFeatures.appendChild(fragment);
       popup.querySelector('ul + p').textContent = oneAd.offer.description;
       popup.querySelector('.popup__avatar').src = oneAd.author.avatar;
+      var popupPhotos = popup.querySelector('.popup__pictures');
+      removeNodes(popupFeatures, 'li');
+      for (i = 0; i < oneAd.offer.photos.length; i++) {
+        li = document.createElement('li');
+        var liImg = document.createElement('img');
+        liImg.src = oneAd.offer.photos[i];
+        liImg.width = 50;
+        liImg.height = 50;
+        li.appendChild(liImg);
+        fragment.appendChild(li);
+      }
+      popupPhotos.textContent = '';
+      popupPhotos.appendChild(fragment);
     },
 
     showCard: function (elementToClick, elementToShow, callback) {

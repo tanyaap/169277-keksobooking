@@ -69,7 +69,9 @@
   map.addEventListener('keydown', onPopupEscPress);
 
   function closePopup() {
-    //  pinActive.classList.remove('map__pin--active');
+    if (pinActive) {
+      pinActive.classList.remove('map__pin--active');
+    }
     popup.classList.add('hidden');
     document.removeEventListener('keydown', onPopupEscPress);
   }
@@ -98,8 +100,7 @@
   }
 
   filtersForm.addEventListener('change', function () {
-    onFilterChange(adsSet);
-    window.util.debounce(window.pin.renderPins);
+    window.util.debounce(onFilterChange(adsSet), 500);
   });
 
   var address = document.querySelector('#address');

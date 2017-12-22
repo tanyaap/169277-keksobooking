@@ -8,7 +8,7 @@
   var housingPrice = filtersForm.querySelector('#housing-price');
   var housingRooms = filtersForm.querySelector('#housing-rooms');
   var housingGuests = filtersForm.querySelector('#housing-guests');
-  //  var housingFeatures = filtersForm.querySelector('#housing-features');
+  var housingFeatures = filtersForm.querySelector('#housing-features');
 
   function filterAdType(arrAds, val) {
     var typeChoice = arrAds.filter(function (it) {
@@ -21,7 +21,7 @@
     var priceRangeChoice = arrAds.filter(function (it) {
       var price = parseInt(it.offer.price, 10);
       var priceType = 'any';
-      if (price >= LOWEST_PRICE || price <= HIGHEST_PRICE) {
+      if (price >= LOWEST_PRICE && price <= HIGHEST_PRICE) {
         priceType = 'middle';
       } else if (price > HIGHEST_PRICE) {
         priceType = 'high';
@@ -35,19 +35,28 @@
 
   function filterAdRoom(arrAds, val) {
     var roomsChoice = arrAds.filter(function (it) {
-      return it.offer.rooms === val;
+      return it.offer.rooms.toString() === val;
     });
     return roomsChoice;
   }
 
   function filterAdGuests(arrAds, val) {
     var guestsChoice = arrAds.filter(function (it) {
-      return it.offer.guests === val;
+      return it.offer.guests.toString() === val;
     });
     return guestsChoice;
   }
 
-  //  function filterAdFeatures() {}
+  function filterAdFeatures(arrAds) {
+    var featuresChecked = filtersForm.querySelectorAll('#housing-features [type="checkbox"]:checked');
+    var featuresChoice = arrAds;
+    [].forEach.call(featuresChecked, function (item) {
+      featuresChoice = featuresChoice.filter(function (it) {
+        return it.offer.features.indexOf(item.value) >= 0;
+      });
+    });
+    return featuresChoice;
+  }
 
   window.filters = function (arrAds) {
     var filteredArray = arrAds;
@@ -62,6 +71,9 @@
     }
     if (housingGuests.value !== 'any') {
       filteredArray = filterAdGuests(filteredArray, housingGuests.value);
+    }
+    if (housingFeatures.value !== 'any') {
+      filteredArray = filterAdFeatures(filteredArray, housingFeatures.value);
     }
     return filteredArray;
   };
