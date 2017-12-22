@@ -11,6 +11,7 @@
   var adTemplate = document.querySelector('template').content;
   var popup = adTemplate.querySelector('.map__card').cloneNode(true);
   var popupClose = popup.querySelector('.popup__close');
+  var filtersForm = document.querySelector('.map__filters');
   var pinMainX = mapPinMain.offsetLeft + MAIN_PIN_WIDTH / 2;
   var pinMainY = mapPinMain.offsetTop + MAIN_PIN_HEIGHT;
   var limits = {
@@ -56,27 +57,6 @@
   }
   map.addEventListener('click', onPinClick);
 
-  var filtersForm = document.querySelector('.map__filters');
-
-  filtersForm.addEventListener('change', function () {
-    window.filterChange.filterAdType(adsSet, 'house');
-    window.filterChange.filterAdType(adsSet, 'flat');
-    window.filterChange.filterAdType(adsSet, 'bungalo');
-    window.filterChange.filterAdType(adsSet, 'palace');
-  });
-
-  /*  function updatePins() {
-    window.pin(adsSet.sort(function (left, right) {
-      return window.getRank(right) - window.getRank(left);
-    }));
-  }
-
-  var type;
-  window.pinChange.onTypeChange = function (housingType) {
-    type = housingType;
-    window.util.debounce(updatePins);
-  };*/
-
   map.addEventListener('keydown', function (evt) {
     if (!mapPinMain) {
       window.util.isEnterEvent(evt, onPinClick);
@@ -89,7 +69,7 @@
   map.addEventListener('keydown', onPopupEscPress);
 
   function closePopup() {
-    pinActive.classList.remove('map__pin--active');
+    //  pinActive.classList.remove('map__pin--active');
     popup.classList.add('hidden');
     document.removeEventListener('keydown', onPopupEscPress);
   }
@@ -101,6 +81,25 @@
   popupClose.addEventListener('click', onPopupClick);
   popupClose.addEventListener('keydown', function (evt) {
     window.util.isEnterEvent(evt, closePopup);
+  });
+
+  function removeAllPins() {
+    var pins = map.querySelectorAll('.map__pin:not(.map__pin--main)');
+    [].forEach.call(pins, function (pin) {
+      mapPins.removeChild(pin);
+    });
+  }
+
+  function onFilterChange(arrAds) {
+    removeAllPins();
+    closePopup();
+    var filterArr = window.filters(arrAds);
+    window.pin.renderPins(filterArr);
+  }
+
+  filtersForm.addEventListener('change', function () {
+    onFilterChange(adsSet);
+    window.util.debounce(window.pin.renderPins);
   });
 
   var address = document.querySelector('#address');

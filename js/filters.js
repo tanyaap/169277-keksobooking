@@ -3,43 +3,66 @@
 (function () {
   var LOWEST_PRICE = 10000;
   var HIGHEST_PRICE = 50000;
-  /*  var filtersForm = document.querySelector('.map__filters');
+  var filtersForm = document.querySelector('.map__filters');
   var housingType = filtersForm.querySelector('#housing-type');
   var housingPrice = filtersForm.querySelector('#housing-price');
   var housingRooms = filtersForm.querySelector('#housing-rooms');
   var housingGuests = filtersForm.querySelector('#housing-guests');
-  var housingFeatures = filtersForm.querySelector('#housing-features');*/
+  //  var housingFeatures = filtersForm.querySelector('#housing-features');
 
-  window.filterChange = {
-    filterAdType: function (arrAds, val) {
-      var typeChoice = arrAds.filter(function (it) {
-        return it.offer.type === val;
-      });
-      return typeChoice;
-    },
-    filterAdPrice: function (arrAds, val) {
-      var priceRangeChoice = arrAds.filter(function (it) {
-        if (val === LOWEST_PRICE || val === HIGHEST_PRICE) {
-          return it.offer.price === val;
-        } else if (val > LOWEST_PRICE || val < HIGHEST_PRICE) {
-          return it.offer.price === val;
-        }
-        return it.offer.price === val;
-      });
-      return priceRangeChoice;
-    },
-    filterAdRoom: function (arrAds, val) {
-      var roomsChoice = arrAds.filter(function (it) {
-        return it.offer.rooms >= val;
-      });
-      return roomsChoice;
-    },
-    filterAdGuests: function (arrAds, val) {
-      var guestsChoice = arrAds.filter(function (it) {
-        return it.offer.guests === val;
-      });
-      return guestsChoice;
-    },
-    filterAdFeatures: function () {}
+  function filterAdType(arrAds, val) {
+    var typeChoice = arrAds.filter(function (it) {
+      return it.offer.type === val;
+    });
+    return typeChoice;
+  }
+
+  function filterAdPrice(arrAds, val) {
+    var priceRangeChoice = arrAds.filter(function (it) {
+      var price = parseInt(it.offer.price, 10);
+      var priceType = 'any';
+      if (price >= LOWEST_PRICE || price <= HIGHEST_PRICE) {
+        priceType = 'middle';
+      } else if (price > HIGHEST_PRICE) {
+        priceType = 'high';
+      } else {
+        priceType = 'low';
+      }
+      return priceType === val;
+    });
+    return priceRangeChoice;
+  }
+
+  function filterAdRoom(arrAds, val) {
+    var roomsChoice = arrAds.filter(function (it) {
+      return it.offer.rooms === val;
+    });
+    return roomsChoice;
+  }
+
+  function filterAdGuests(arrAds, val) {
+    var guestsChoice = arrAds.filter(function (it) {
+      return it.offer.guests === val;
+    });
+    return guestsChoice;
+  }
+
+  //  function filterAdFeatures() {}
+
+  window.filters = function (arrAds) {
+    var filteredArray = arrAds;
+    if (housingType.value !== 'any') {
+      filteredArray = filterAdType(filteredArray, housingType.value);
+    }
+    if (housingPrice.value !== 'any') {
+      filteredArray = filterAdPrice(filteredArray, housingPrice.value);
+    }
+    if (housingRooms.value !== 'any') {
+      filteredArray = filterAdRoom(filteredArray, housingRooms.value);
+    }
+    if (housingGuests.value !== 'any') {
+      filteredArray = filterAdGuests(filteredArray, housingGuests.value);
+    }
+    return filteredArray;
   };
 })();
