@@ -8,7 +8,6 @@
   var housingPrice = filtersForm.querySelector('#housing-price');
   var housingRooms = filtersForm.querySelector('#housing-rooms');
   var housingGuests = filtersForm.querySelector('#housing-guests');
-  var housingFeatures = filtersForm.querySelector('#housing-features');
 
   function filterAdType(arrAds, val) {
     var typeChoice = arrAds.filter(function (it) {
@@ -72,9 +71,7 @@
     if (housingGuests.value !== 'any') {
       filteredArray = filterAdGuests(filteredArray, housingGuests.value);
     }
-    if (housingFeatures.value !== 'any') {
-      filteredArray = filterAdFeatures(filteredArray, housingFeatures.value);
-    }
+    filteredArray = filterAdFeatures(filteredArray);
     return filteredArray;
   };
 })();

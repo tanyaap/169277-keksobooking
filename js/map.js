@@ -3,6 +3,7 @@
 (function () {
   var MAIN_PIN_WIDTH = 40;
   var MAIN_PIN_HEIGHT = 44;
+  var DEBOUNCE_INTERVAL = 500;
   var map = document.querySelector('.map');
   var mapPins = map.querySelector('.map__pins');
   var mapPinMain = map.querySelector('.map__pin--main');
@@ -27,7 +28,7 @@
     for (var i = 0; i < adsSet.length; i++) {
       adsSet[i].id = i;
     }
-    window.pin.renderPins(adsSet);
+    window.pin.renderPins(adsSet.slice(5));
   }
 
   function onMouseupActivate() {
@@ -95,12 +96,11 @@
   function onFilterChange(arrAds) {
     removeAllPins();
     closePopup();
-    var filterArr = window.filters(arrAds);
-    window.pin.renderPins(filterArr);
+    window.pin.renderPins(window.filters(arrAds).slice(5));
   }
 
   filtersForm.addEventListener('change', function () {
-    window.util.debounce(onFilterChange(adsSet), 500);
+    window.util.debounce(onFilterChange(adsSet), DEBOUNCE_INTERVAL);
   });
 
   var address = document.querySelector('#address');
